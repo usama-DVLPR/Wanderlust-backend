@@ -8,7 +8,10 @@ router.param("id", tourController.checkId);
 
 // routes
 
-router.route("/").get(tourController.getAllTours).post(tourController.addTour);
+router
+  .route("/")
+  .get(tourController.getAllTours)
+  .post(tourController.checkBody, tourController.addTour);
 
 router
   .route("/:id")
