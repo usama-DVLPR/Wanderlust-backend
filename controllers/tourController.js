@@ -4,6 +4,17 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../mock/tours-simple.json`)
 );
 
+exports.checkId = (req, res, next, val) => {
+  const id = +req.params.id;
+  if (id > tours.length || id < 0) {
+    return res.status(404).json({
+      status: "fail",
+      message: "Invalid ID",
+    });
+  }
+  next();
+};
+
 exports.getAllTours = (req, res, next) => {
   res.status(200).json({
     status: "success",
@@ -32,13 +43,6 @@ exports.getTour = (req, res, next) => {
   const id = +req.params.id;
 
   const tour = tours.find((tour) => tour.id === id);
-
-  if (!tour) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Invalid ID",
-    });
-  }
   res.status(200).json({
     status: "success",
     data: tour,
@@ -46,13 +50,6 @@ exports.getTour = (req, res, next) => {
 };
 
 exports.updateTour = (req, res, next) => {
-  const id = +req.params.id;
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Invalid ID",
-    });
-  }
   res.status(200).json({ status: "success", data: "<Updated Tour here...>" });
 };
 
