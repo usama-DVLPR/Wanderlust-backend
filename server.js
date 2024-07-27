@@ -17,12 +17,12 @@ mongoose
 const tourSchema = new mongoose.Schema({
   name: {
     type: String,
-    require: [true, "A tour must have a name"],
+    required: [true, "A tour must have a name"],
     unique: true,
   },
   price: {
     type: Number,
-    require: [true, "A tour must have a price"],
+    required: [true, "A tour must have a price"],
   },
   rating: {
     type: Number,
@@ -33,6 +33,25 @@ const tourSchema = new mongoose.Schema({
 // creating model from schema
 const TourModel = new mongoose.model("Tour", tourSchema);
 
+const testTour = new TourModel({
+  name: "The Forest Hiker",
+  price: 499,
+});
+testTour
+  .save()
+  .then((res) => console.log(res))
+  .catch((err) => {
+    if (err.name === "ValidationError") {
+      for (let field in err.errors) {
+        console.error(`${err.errors[field].message}`);
+        if (err.errors[field].properties && err.errors[field].properties.type) {
+          console.error(`Error code: ${err.errors[field].properties.type}`);
+        }
+      }
+    } else {
+      console.error("Error creating tour:", err);
+    }
+  });
 // server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
