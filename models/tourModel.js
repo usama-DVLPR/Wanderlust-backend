@@ -89,7 +89,12 @@ tourSchema.pre(/^find/,function(next){
 })
 
 
+// Aggregate pipeline 
 
+tourSchema.pre('aggregate',function(next){
+  this.pipeline().unshift({$match :{secretTour:{$ne:true} }})
+  next()
+})
 // creating model from schema
 const Tour = new mongoose.model("Tour", tourSchema);
 module.exports = Tour;
